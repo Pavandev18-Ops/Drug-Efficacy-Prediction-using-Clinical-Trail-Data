@@ -57,7 +57,11 @@ label_encoder = LabelEncoder()
 user_data['gender'] = label_encoder.fit_transform(user_data['gender'])
 
 # Get the list of columns expected by the model
-expected_columns = model.feature_names_in_
+if hasattr(model, "feature_names_in_"):
+    expected_columns = model.feature_names_in_
+else:
+    # Fallback: if 'feature_names_in_' doesn't exist, use the user_data columns
+    expected_columns = user_data.columns
 
 # Get the missing columns by comparing the expected columns with the user_data columns
 missing_cols = set(expected_columns) - set(user_data.columns)
