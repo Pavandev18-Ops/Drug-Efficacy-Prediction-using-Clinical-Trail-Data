@@ -55,6 +55,8 @@ user_data = user_data.drop(columns=['treatment_id','patient_id','drug_id','insur
 # Categorical Encoding: Encode 'gender' column using LabelEncoder
 label_encoder = LabelEncoder()
 user_data['gender'] = label_encoder.fit_transform(user_data['gender'])
+user_data['drug_name'] = label_encoder.fit_transform(user_data['drug_name'])
+user_data['category'] = label_encoder.fit_transform(user_data['category'])
 
 # Get the list of columns expected by the model
 if hasattr(model, "feature_names_in_"):
