@@ -66,24 +66,23 @@ else:
     expected_columns = user_data.columns
 
 # Get the missing columns by comparing the expected columns with the user_data columns
-missing_cols = set(expected_columns) - set(user_data.columns)
+# Check and add missing features
+missing_features = set(expected_features) - set(user_data.columns)
+for feature in missing_features:
+    if feature in df.columns and df[feature].dtype == 'object':
+        user_data[feature] = 'unknown'  # Default value for categorical
+    else:
+        user_data[feature] = 0  # Default value for numeric
 
-for col in missing_cols:
-    if col in df.columns and df[col].dtype == 'object':  # If categorical, use 'unknown'
-        user_data[col] = 'unknown'
-    else:  # If numeric, use 0 as a default value
-        user_data[col] = 0
+# Ensure correct order
+user_data_preprocessed = user_data[expected_features]
 
-# Ensure correct column order for prediction
-user_data_preprocessed = user_data[expected_columns]
+# Validate input shape
+assert user_data_preprocessed.shape[1] == len(expected_features), \
+    f"Input data has {user_data_preprocessed.shape[1]} features, but {len(expected_features)} are expected."
 
-# Verify all feature names match and have the correct types
-assert list(user_data_preprocessed.columns) == list(expected_columns), "Feature order mismatch."
-
-# Add a button for prediction
+# Make prediction
 if st.button("Predict"):
-    # Prediction logic
     prediction = model.predict(user_data_preprocessed)
-    
-    # Display the prediction result
     st.write(f"Predicted Drug Efficacy Score: {prediction[0]}")
+
