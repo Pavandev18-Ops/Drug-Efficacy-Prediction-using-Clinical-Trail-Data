@@ -5,7 +5,7 @@ from data_processing import load_data, handling_missing_values, preprocess_data
 from model_save_load import load_model
 
 # Load the dataset and the trained model
-df = load_data(r'C:\Users\jammalapavan\Desktop\POC\clinical_trial_dataset.csv')
+df = load_data('.\clinical_trial_dataset.csv')
 model = load_model('models/best_gradient_boosting_model.pkl')
 
 # Extract unique values for dropdowns and value ranges for sliders
