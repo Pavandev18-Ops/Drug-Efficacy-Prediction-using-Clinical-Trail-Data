@@ -68,15 +68,17 @@ else:
 # Get the missing columns by comparing the expected columns with the user_data columns
 missing_cols = set(expected_columns) - set(user_data.columns)
 
-# Add missing columns with default values automatically
 for col in missing_cols:
-    if col in df.columns and df[col].dtype == 'object':  # Categorical column
-        user_data[col] = 'unknown'  # Default value for categorical columns
-    else:  # Numeric columns
-        user_data[col] = 0  # Default value for numeric columns
+    if col in df.columns and df[col].dtype == 'object':  # If categorical, use 'unknown'
+        user_data[col] = 'unknown'
+    else:  # If numeric, use 0 as a default value
+        user_data[col] = 0
 
-# Ensure the columns are in the correct order as expected by the model
+# Ensure correct column order for prediction
 user_data_preprocessed = user_data[expected_columns]
+
+# Verify all feature names match and have the correct types
+assert list(user_data_preprocessed.columns) == list(expected_columns), "Feature order mismatch."
 
 # Add a button for prediction
 if st.button("Predict"):
