@@ -6,7 +6,7 @@ from model_save_load import load_model
 
 # Load the dataset and the trained model
 df = load_data('clinical_trial_dataset.csv')
-model = load_model('models/best_gradient_boosting_model.pkl')
+model = load_model('models/gradient_boosting_model.pkl')
 
 # Extract unique values for dropdowns and value ranges for sliders
 unique_drug_names = df['drug_name'].unique()
