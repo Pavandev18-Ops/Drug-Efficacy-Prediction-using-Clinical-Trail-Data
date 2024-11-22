@@ -74,9 +74,9 @@ missing_cols = set(feature_names) - set(user_data.columns)
 # Add missing columns with default values automatically
 for col in missing_cols:
     if col in df.columns and df[col].dtype == 'object':  # Categorical column
-        user_data[col] = 'unknown'  # Default value for categorical columns
+        user_data[col] = df[col].mode()[0]  # Default value for categorical columns
     else:  # Numeric columns
-        user_data[col] = 0  # Default value for numeric columns
+        user_data[col] = df[col].mean()  # Default value for numeric columns
 
 # Ensure the columns are in the correct order as expected by the model
 user_data = user_data[feature_names]
