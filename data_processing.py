@@ -1,6 +1,5 @@
-#data_processing.py
 import pandas as pd
-import joblib 
+import pickle  # Using pickle instead of joblib
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
 
@@ -29,11 +28,13 @@ def preprocess_data(df, fit=True):
         encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
         encoded_features = encoder.fit_transform(df[categorical_cols])
 
-        # Save the encoder for future use
-        joblib.dump(encoder, 'Model_Development/encoder.pkl')
+        # Save the encoder for future use using pickle
+        with open('Model_Development/encoder.pkl', 'wb') as file:
+            pickle.dump(encoder, file)
     else:
-        # Load the pre-trained encoder
-        encoder = joblib.load('Model_Development/encoder.pkl')
+        # Load the pre-trained encoder using pickle
+        with open('Model_Development/encoder.pkl', 'rb') as file:
+            encoder = pickle.load(file)
         encoded_features = encoder.transform(df[categorical_cols])
 
     # Convert the encoded features to a DataFrame
