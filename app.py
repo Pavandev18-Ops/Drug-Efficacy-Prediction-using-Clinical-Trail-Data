@@ -40,8 +40,6 @@ age = st.slider("Age", min_value=age_min, max_value=age_max, value=30)
 gender = st.selectbox("Gender", df['gender'].unique())  # This will give you 'M' or 'F'
 bmi = st.slider("BMI", min_value=bmi_min, max_value=bmi_max, value=25.0)
 socioeconomic_score = st.slider("Socioeconomic Score", min_value=socio_min, max_value=socio_max, value=50.0)
-dosage_deviation = st.number_input("Dosage Deviation",min_value=-1.0,max_value=1.0,value=0.0,step=0.01)
-treatment_compliance_score = st.number_input("Treatment Compliance Score",min_value=0.0,max_value=1.0,value=0.8,step=0.01)
 
 
 
@@ -56,9 +54,7 @@ user_data = pd.DataFrame({
     'age': [age],
     'gender': [gender],
     'bmi': [bmi],
-    'socioeconomic_score': [socioeconomic_score],
-    'dosage_deviation' : [dosage_deviation],
-    'treatment_compliance_score' : [treatment_compliance_score]
+    'socioeconomic_score': [socioeconomic_score]
 })
 
 # Remove the columns if they were dropped during training
@@ -71,12 +67,16 @@ user_data['gender'] = label_encoder.fit_transform(user_data['gender'])
 # Ensure the user input data has the same columns as the model expects
 missing_cols = set(feature_names) - set(user_data.columns)
 
-# Add missing columns with default values automatically
 for col in missing_cols:
-    if col in df.columns and df[col].dtype == 'object':  # Categorical column
-        user_data[col] = df[col].mode()[0]  # Default value for categorical columns
-    else:  # Numeric columns
-        user_data[col] = df[col].mean()  # Default value for numeric columns
+    if col in df.columns:  # Check if the column exists in df
+        if df[col].dtype == 'object':  # Categorical column
+            user_data[col] = df[col].mode()[0]  # Default value for categorical
+        else:  # Numeric column
+            user_data[col] = df[col].mean()  # Default value for numeric
+    else:
+        # Assign a default placeholder for truly missing columns
+        user_data[col] = 0  # Or another reasonable default
+    
 
 # Ensure the columns are in the correct order as expected by the model
 user_data = user_data[feature_names]
@@ -86,7 +86,7 @@ user_data = user_data[feature_names]
 # Add a button for prediction
 if st.button("Predict"):
     # Prediction logic
-    prediction = model.predict(user_data)
+    prediction = model.predict(user_data[feature_names])
     
     # Display the prediction result
     st.write(f"Predicted Drug Efficacy Score: {prediction[0]}")
