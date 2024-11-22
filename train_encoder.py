@@ -1,7 +1,6 @@
-#training_encoder.py
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
-import joblib
+import pickle  # Use pickle instead of joblib
 
 # Load the dataset
 df = pd.read_csv('clinical_trial_dataset.csv')
@@ -13,6 +12,8 @@ categorical_cols = ['drug_name', 'category', 'gender']
 encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
 encoder.fit(df[categorical_cols])
 
-# Save the encoder to a file
-joblib.dump(encoder, 'Model_Development/encoder.pkl')
+# Save the encoder to a file using pickle
+with open('Model_Development/encoder.pkl', 'wb') as file:
+    pickle.dump(encoder, file)
+
 print("Encoder saved successfully!")
