@@ -67,19 +67,19 @@ else:
 
 # Get the missing columns by comparing the expected columns with the user_data columns
 # Check and add missing features
-missing_features = set(expected_features) - set(user_data.columns)
+missing_features = set(expected_columns) - set(user_data.columns)
 for feature in missing_features:
-    if feature in df.columns and df[feature].dtype == 'object':
-        user_data[feature] = 'unknown'  # Default value for categorical
-    else:
-        user_data[feature] = 0  # Default value for numeric
+    if feature in df.columns and df[feature].dtype == 'object':  # Categorical
+        user_data[feature] = 'unknown'  # Default for categorical features
+    else:  # Numeric
+        user_data[feature] = 0  # Default for numeric features
 
 # Ensure correct order
-user_data_preprocessed = user_data[expected_features]
+user_data_preprocessed = user_data[expected_columns]
 
 # Validate input shape
-assert user_data_preprocessed.shape[1] == len(expected_features), \
-    f"Input data has {user_data_preprocessed.shape[1]} features, but {len(expected_features)} are expected."
+assert user_data_preprocessed.shape[1] == len(expected_columns), \
+    f"Input data has {user_data_preprocessed.shape[1]} features, but {len(expected_columns)} are expected."
 
 # Make prediction
 if st.button("Predict"):
