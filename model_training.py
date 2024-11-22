@@ -1,14 +1,24 @@
-# model_training.py
-
+#model_training.py
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import GridSearchCV
+import pandas as pd
 
 def train_model(X_train, y_train):
+    # Ensure X_train is a DataFrame
+    if not isinstance(X_train, pd.DataFrame):
+        X_train = pd.DataFrame(X_train)
+
     gb_model = GradientBoostingRegressor(random_state=43)
     gb_model.fit(X_train, y_train)
-    return gb_model
+    
+    # Return the model and the column names of X_train
+    return gb_model, X_train.columns.tolist()
 
 def hyperparameter_tuning(X_train, y_train):
+    # Ensure X_train is a DataFrame
+    if not isinstance(X_train, pd.DataFrame):
+        X_train = pd.DataFrame(X_train)
+
     gb_model = GradientBoostingRegressor(random_state=43)
     param_grid = {
         'n_estimators': [50, 100],
@@ -29,4 +39,8 @@ def hyperparameter_tuning(X_train, y_train):
         n_jobs=-1
     )
     grid_search_gb.fit(X_train, y_train)
-    return grid_search_gb.best_estimator_, grid_search_gb.best_params_
+  
+    # Return the best model, best parameters, and the column names of X_train
+    return grid_search_gb.best_estimator_, grid_search_gb.best_params_, X_train.columns.tolist()
+
+
